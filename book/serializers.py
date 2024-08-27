@@ -27,11 +27,14 @@ class XMLSerializer(Serializer):
 
 
 class SerializeBook:
+    _strategies = {
+        "json": JSONSerializer(),
+        "xml": XMLSerializer(),
+    }
+
     @staticmethod
     def serialize(book: Book, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return JSONSerializer().serialize(book)
-        elif serialize_type == "xml":
-            return XMLSerializer().serialize(book)
-        else:
+        serializer = SerializeBook._strategies.get(serialize_type)
+        if serializer is None:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
+        return serializer.serialize(book)

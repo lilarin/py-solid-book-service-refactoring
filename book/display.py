@@ -23,11 +23,16 @@ class DisplayReverse(Display):
 
 
 class DisplayBook:
+    _strategies = {
+        "console": DisplayConsole(),
+        "reverse": DisplayReverse(),
+    }
+
     @staticmethod
     def display(book: Book, display_type: str) -> None:
-        if display_type == "console":
-            DisplayConsole().display(book)
-        elif display_type == "reverse":
-            DisplayReverse().display(book)
-        else:
+        display_strategy = DisplayBook._strategies.get(display_type)
+        if display_strategy is None:
             raise ValueError(f"Unknown display type: {display_type}")
+        return display_strategy.display(book)
+
+

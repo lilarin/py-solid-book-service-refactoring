@@ -25,11 +25,14 @@ class PrintReverse(Print):
 
 
 class PrintBook:
+    _strategies = {
+        "console": PrintConsole(),
+        "reverse": PrintReverse(),
+    }
+
     @staticmethod
     def print(book: Book, print_type: str) -> None:
-        if print_type == "console":
-            PrintConsole().print(book)
-        elif print_type == "reverse":
-            PrintReverse().print(book)
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+        print_strategy = PrintBook._strategies.get(print_type)
+        if print_strategy is None:
+            raise ValueError(f"Unknown display type: {print_type}")
+        return print_strategy.print(book)
